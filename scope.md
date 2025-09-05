@@ -99,6 +99,23 @@ Build a React.js admin page with authentication, two main sections (Captions and
 -   Loading states
 -   Final testing across devices
 
+## Development Approach
+
+### Collaborative Development
+
+-   **Interview Context**: This project is for a potential employer interview
+-   **Participation Required**: Developer must actively participate in coding to understand and explain the implementation
+-   **Code Style**: Should look like it was written by a middle-level React developer
+-   **Natural Variations**: Include some inconsistencies and human-like coding patterns
+-   **Functionality First**: Focus on working features over perfect code structure
+
+### Development Process
+
+-   **Planning Phase**: Discuss approach and architecture decisions together
+-   **Implementation**: Collaborative coding with explanations for each component
+-   **Code Review**: Walk through each feature to ensure understanding
+-   **Documentation**: Add comments and structure that can be explained during interview
+
 ## Key Considerations
 
 -   Make it look human-coded (not AI-generated)
@@ -106,3 +123,4 @@ Build a React.js admin page with authentication, two main sections (Captions and
 -   Focus on functionality over perfect design
 -   Ensure all API endpoints work correctly
 -   Handle edge cases and error states
+-   **Interview Ready**: Code should be explainable and demonstrate React knowledge
