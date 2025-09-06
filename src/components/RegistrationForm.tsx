@@ -42,11 +42,9 @@ const RegistrationForm = () => {
                 JSON.stringify({
                     username,
                     name,
-                    // Add other user data from response if available
                 })
             );
 
-            console.log('Registration successful:', response);
             setSuccess('Registration successful! You can now login.');
             navigate('/login');
         } catch (err: any) {

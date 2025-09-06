@@ -85,7 +85,7 @@ const LoginForm = () => {
                             to="/register"
                             className="underline underline-offset-4"
                         >
-                            Sign in
+                            Sign up
                         </Link>
                     </div>
                 </form>
