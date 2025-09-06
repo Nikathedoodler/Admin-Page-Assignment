@@ -1,27 +1,27 @@
 import api from './index';
 
-export const login = async (email: string, password: string) => {
-    const response = await api.post('/auth/login', {
-        email,
+export const login = async (username: string, password: string) => {
+    const response = await api.post('/Api/Client/Login', {
+        username,
         password,
     });
     return response.data;
 };
 
 export const register = async (
-    email: string,
+    username: string,
     password: string,
-    name: string
+    confirm_password: string
 ) => {
-    const response = await api.post('/auth/register', {
-        email,
+    const response = await api.post('/Api/Client/Register', {
+        username,
         password,
-        name,
+        confirm_password,
     });
     return response.data;
 };
 
 export const logout = () => {
-    sessionStorage.remove('jwt_token');
-    sessionStorage.remove('user');
+    sessionStorage.removeItem('jwt_token');
+    sessionStorage.removeItem('user');
 };

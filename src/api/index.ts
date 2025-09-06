@@ -1,10 +1,13 @@
 // src/api/index.ts
 import axios from 'axios';
 
+// In src/api/index.ts
 const api = axios.create({
-    baseURL:
-        'https://app.swaggerhub.com/apis-docs/goodwell/my-external_api/1.0.0',
-    timeout: 1000,
+    baseURL: 'https://lexiconapi.onrender.com',
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 // Add token to requests
