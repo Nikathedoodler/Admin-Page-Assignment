@@ -1,14 +1,16 @@
 const LoginForm = () => {
     return (
-        <div className="h-2/5 w-1/4 flex flex-col items-center justify-center border rounded-xl shadow shadow-lg">
-            <div className="w-4/5">
-                <div className="font-bold mb-10">Login in your account</div>
+        <div className="w-full max-w-sm sm:max-w-md lg:max-w-[420px] flex flex-col items-center justify-center border rounded-xl shadow shadow-lg p-6">
+            <div className="w-full">
+                <div className="font-bold mb-10 text-center">
+                    Login in your account
+                </div>
                 <form>
                     <div className="flex flex-col gap-6">
                         <div className="grid gap-3">
                             <label className="font-semi-bold">Email</label>
                             <input
-                                className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4"
+                                className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4 w-full"
                                 placeholder="abc@gexample.com"
                                 type="email"
                             />
@@ -16,7 +18,7 @@ const LoginForm = () => {
                         <div className="grid gap-3">
                             <label className="font-semi-bold">Password</label>
                             <input
-                                className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4"
+                                className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4 w-full"
                                 type="password"
                             />
                         </div>
