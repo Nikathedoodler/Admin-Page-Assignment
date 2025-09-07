@@ -29,7 +29,7 @@ const LoginForm = () => {
             sessionStorage.setItem('user', JSON.stringify(response.user));
 
             setSuccess('Login successful!');
-            navigate('/caption');
+            navigate('/captions');
         } catch (err) {
             setError('Login Failed');
         } finally {
