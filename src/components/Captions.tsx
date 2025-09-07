@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addWord, getAllWords, editWord, deleteWord } from '../api/captions';
+import { Modal } from './Modal';
 
 interface Caption {
     _id?: string;
@@ -19,9 +20,17 @@ export const Captions = () => {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
+    // Edit modal states
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editingCaption, setEditingCaption] = useState<Caption | null>(null);
+    const [editNational, setEditNational] = useState('');
+    const [editForeign, setEditForeign] = useState('');
+    const [editError, setEditError] = useState('');
+    const [editLoading, setEditLoading] = useState(false);
+
     useEffect(() => {
         const fetchCaptions = async () => {
-            setFetchLoading(true); // Set loading for fetch
+            setFetchLoading(true);
             try {
                 const response = await getAllWords();
                 if (response.words) setCaptions(response.words);
@@ -72,6 +81,41 @@ export const Captions = () => {
             setError('Failed to Delete');
         } finally {
             setDeletingId(null);
+        }
+    };
+
+    // Edit modal handlers
+    const handleEditClick = (caption: Caption) => {
+        setEditingCaption(caption);
+        setEditNational(caption.national);
+        setEditForeign(caption.foreign);
+        setEditError('');
+        setEditModalOpen(true);
+    };
+
+    const handleEditSave = async () => {
+        if (!editingCaption?._id) return;
+
+        if (!editNational || !editForeign) {
+            setEditError('Fill all fields');
+            return;
+        }
+
+        setEditLoading(true);
+
+        try {
+            const response = await editWord(
+                editNational,
+                editForeign,
+                editingCaption._id
+            );
+            if (response.words) setCaptions(response.words);
+            setEditModalOpen(false);
+            setEditingCaption(null);
+        } catch (err) {
+            setError('Failed to update caption');
+        } finally {
+            setEditLoading(false);
         }
     };
 
@@ -144,7 +188,12 @@ export const Captions = () => {
                                             {caption.national}
                                         </td>
                                         <td className="border border-gray-300 px-4 py-2 text-center">
-                                            <button className="bg-blue-500 text-white px-4 py-2 rounded mr-2">
+                                            <button
+                                                className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                                                onClick={() =>
+                                                    handleEditClick(caption)
+                                                }
+                                            >
                                                 Edit
                                             </button>
                                             <button
@@ -170,6 +219,63 @@ export const Captions = () => {
                     </table>
                 </div>
             </div>
+
+            {/* Edit Modal */}
+            <Modal
+                isOpen={editModalOpen}
+                onClose={() => {
+                    setEditModalOpen(false);
+                    setEditingCaption(null);
+                }}
+                title="Edit Caption"
+            >
+                <div className="space-y-4">
+                    {editError && (
+                        <div className="text-red-500 text-sm text-center p-2 bg-red-50 rounded">
+                            {editError}
+                        </div>
+                    )}
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Foreign
+                        </label>
+                        <input
+                            type="text"
+                            value={editForeign}
+                            onChange={(e) => setEditForeign(e.target.value)}
+                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            National
+                        </label>
+                        <input
+                            type="text"
+                            value={editNational}
+                            onChange={(e) => setEditNational(e.target.value)}
+                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div className="flex gap-3 justify-end">
+                        <button
+                            onClick={() => {
+                                setEditModalOpen(false);
+                                setEditingCaption(null);
+                            }}
+                            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleEditSave}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };
