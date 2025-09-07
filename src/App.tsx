@@ -6,7 +6,7 @@ import { Captions } from './components/Captions';
 
 function App() {
     return (
-        <div className="h-screen flex items-center justify-center">
+        <div className="min-h-screen">
             <Routes>
                 <Route path="/" element={<LoginForm />} />
                 <Route path="/login" element={<LoginForm />} />
