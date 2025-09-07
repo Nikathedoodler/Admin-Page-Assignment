@@ -17,6 +17,7 @@ export const Captions = () => {
     const [error, setError] = useState('');
     const [fetchLoading, setFetchLoading] = useState(false);
     const [submitLoading, setSubmitLoading] = useState(false);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCaptions = async () => {
@@ -43,7 +44,7 @@ export const Captions = () => {
             const response = await addWord(national, foreign);
             console.log('Full response:', response);
 
-            if (response?.words) setCaptions(response.words);
+            if (response.words) setCaptions(response.words);
 
             setNational('');
             setForeign('');
@@ -55,24 +56,43 @@ export const Captions = () => {
         }
     };
 
+    const handleDelete = async (id: string | undefined) => {
+        if (!id) return;
+
+        setDeletingId(id);
+        setError('');
+
+        const deletingItem = captions.filter((caption) => id === caption._id);
+        console.log(deletingItem, 'deletingItem');
+
+        try {
+            const response = await deleteWord(id);
+            if (response.words) setCaptions(response.words);
+        } catch (err) {
+            setError('Failed to Delete');
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto">
                 <div className="flex gap-4 w-full mb-6">
                     <input
-                        placeholder="national"
-                        className="w-full px-4 py-2 border rounded-lg outline-4 outline-offset-2 shadow shadow-xs"
-                        value={national}
-                        onChange={(e) => {
-                            setNational(e.target.value);
-                        }}
-                    />
-                    <input
-                        placeholder="foreign"
+                        placeholder="Foreign"
                         className="w-full px-4 py-2 border rounded-lg outline-4 outline-offset-2 shadow shadow-xs"
                         value={foreign}
                         onChange={(e) => {
                             setForeign(e.target.value);
+                        }}
+                    />
+                    <input
+                        placeholder="National"
+                        className="w-full px-4 py-2 border rounded-lg outline-4 outline-offset-2 shadow shadow-xs"
+                        value={national}
+                        onChange={(e) => {
+                            setNational(e.target.value);
                         }}
                     />
                     <button
@@ -94,10 +114,10 @@ export const Captions = () => {
                         <thead>
                             <tr className="bg-gray-100">
                                 <th className="border border-gray-300 px-4 py-2">
-                                    National
+                                    foreign
                                 </th>
                                 <th className="border border-gray-300 px-4 py-2">
-                                    Foreign
+                                    National
                                 </th>
                                 <th className="border border-gray-300 px-4 py-2">
                                     Actions
@@ -127,8 +147,20 @@ export const Captions = () => {
                                             <button className="bg-blue-500 text-white px-4 py-2 rounded mr-2">
                                                 Edit
                                             </button>
-                                            <button className="bg-red-500 text-white px-4 py-2 rounded">
-                                                Delete
+                                            <button
+                                                className="bg-red-500 text-white px-4 py-2 rounded"
+                                                disabled={
+                                                    deletingId === caption._id
+                                                }
+                                                onClick={() =>
+                                                    handleDelete(
+                                                        caption._id || ''
+                                                    )
+                                                }
+                                            >
+                                                {deletingId === caption._id
+                                                    ? 'Deleting...'
+                                                    : 'Delete'}
                                             </button>
                                         </td>
                                     </tr>
