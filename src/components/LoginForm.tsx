@@ -38,8 +38,7 @@ const LoginForm = () => {
 
             const userData = {
                 username,
-                name:
-                    response.user?.name || storedName || username.split('@')[0],
+                name: response.user?.name || storedName || username,
             };
 
             sessionStorage.setItem('user', JSON.stringify(userData));
@@ -63,11 +62,13 @@ const LoginForm = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-3">
-                                <label className="font-semi-bold">Email</label>
+                                <label className="font-semi-bold">
+                                    Username
+                                </label>
                                 <input
                                     className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4 w-full"
-                                    placeholder="abc@gexample.com"
-                                    type="email"
+                                    placeholder="Enter your username"
+                                    type="text"
                                     value={username}
                                     onChange={(e) =>
                                         setUsername(e.target.value)

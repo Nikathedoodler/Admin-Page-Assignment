@@ -6,7 +6,6 @@ const RegistrationForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [name, setName] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -16,7 +15,7 @@ const RegistrationForm = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!username || !password || !name || !confirmPassword) {
+        if (!username || !password || !confirmPassword) {
             setError('Please fill in all fields');
             return;
         }
@@ -41,7 +40,7 @@ const RegistrationForm = () => {
                 'user',
                 JSON.stringify({
                     username,
-                    name,
+                    name: username,
                 })
             );
 
@@ -64,20 +63,13 @@ const RegistrationForm = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-3">
-                                <label className="font-semi-bold">Name</label>
+                                <label className="font-semi-bold">
+                                    Username
+                                </label>
                                 <input
                                     className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4 w-full"
-                                    placeholder="Name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
-                            <div className="grid gap-3">
-                                <label className="font-semi-bold">Email</label>
-                                <input
-                                    className="border rounded-lg shadow shadow-xs outline-4 outline-offset-2 outline-gray-300 py-2 px-4 w-full"
-                                    placeholder="abc@gexample.com"
-                                    type="email"
+                                    placeholder="Enter your username"
+                                    type="text"
                                     value={username}
                                     onChange={(e) =>
                                         setUsername(e.target.value)
