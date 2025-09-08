@@ -7,7 +7,7 @@ const countriesApi = axios.create({
 
 export const getAllCountries = async () => {
     const response = await countriesApi.get(
-        '/v3.1/all?fields=region,name,capital,currencies,languages'
+        '/v3.1/all?fields=region,name,capital,currencies,languages,independent'
     );
     return response.data;
 };
