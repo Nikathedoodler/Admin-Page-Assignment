@@ -16,12 +16,22 @@ interface Country {
 
 const Countries = () => {
     const [countries, setCountries] = useState<Country[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(15);
+    const [totalItems, setTotalItems] = useState(0);
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const currentCountries = countries.slice(startIndex, endIndex);
 
     useEffect(() => {
         const fetchCountries = async () => {
             const response = await getAllCountries();
             console.log(response, 'response');
             setCountries(response);
+            setTotalItems(response.length);
         };
         fetchCountries();
     }, []);
@@ -49,7 +59,7 @@ const Countries = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {countries.map((country) => (
+                    {currentCountries.map((country) => (
                         <tr key={country.capital[0]}>
                             <td className="border border-gray-300 px-4 py-2">
                                 {country.region}
@@ -70,6 +80,29 @@ const Countries = () => {
                     ))}
                 </tbody>
             </table>
+            <div className="flex justify-center items-center gap-2 mt-4">
+                <button
+                    onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    prev
+                </button>
+                <span className="px-3 py-1">
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button
+                    onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    next
+                </button>
+            </div>
         </div>
     );
 };
