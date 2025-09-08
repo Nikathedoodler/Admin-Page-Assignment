@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getAllCountries } from '../api/countries';
+import Header from './Header';
 
 // Gotta admit, defining Country type was really difficult ))
 interface Country {
@@ -28,7 +29,6 @@ const Countries = () => {
     useEffect(() => {
         const fetchCountries = async () => {
             const response = await getAllCountries();
-            console.log(response, 'response');
             setCountries(response);
         };
         fetchCountries();
@@ -82,95 +82,100 @@ const Countries = () => {
     const currentCountries = filteredCountries.slice(startIndex, endIndex);
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex gap-12 mb-2">
-                <div className="flex align-center justify-center gap-2 py-2 font-semibold">
-                    <input
-                        type="checkbox"
-                        checked={isCheckboxChecked}
-                        onChange={handleCheckboxClick}
-                    />
-                    <label className="m-auto">Independet</label>
+        <>
+            <Header />
+            <div className="container mx-auto px-4 py-8">
+                <div className="flex gap-12 mb-2">
+                    <div className="flex align-center justify-center gap-2 py-2 font-semibold">
+                        <input
+                            type="checkbox"
+                            checked={isCheckboxChecked}
+                            onChange={handleCheckboxClick}
+                        />
+                        <label className="m-auto">Independet</label>
+                    </div>
+                    <div className="flex align-center justify-center gap-4 py-2 font-semibold">
+                        <label className="m-auto">Currency</label>
+                        <select
+                            className="border border-2 px-2 py-1"
+                            value={selectedCurrency}
+                            onChange={handleCurrencyChange}
+                        >
+                            <option value="">All Currencies</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                    </div>
                 </div>
-                <div className="flex align-center justify-center gap-4 py-2 font-semibold">
-                    <label className="m-auto">Currency</label>
-                    <select
-                        className="border border-2 px-2 py-1"
-                        value={selectedCurrency}
-                        onChange={handleCurrencyChange}
-                    >
-                        <option value="">All Currencies</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                    </select>
-                </div>
-            </div>
-            <table className="overflow-x-auto w-full">
-                <thead className="bg-gray-100">
-                    <tr>
-                        <th className="border border-gray-300 px-4 py-2">
-                            Region
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2">
-                            Country
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2">
-                            Capital
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2">
-                            Currency
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2">
-                            Language
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentCountries.map((country) => (
-                        <tr key={country.capital[0]}>
-                            <td className="border border-gray-300 px-4 py-2">
-                                {country.region}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                                {country.name.common}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                                {country.capital[0]}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                                {Object.values(country.currencies)[0]?.name}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                                {Object.values(country.languages)[0]}
-                            </td>
+                <table className="overflow-x-auto w-full">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="border border-gray-300 px-4 py-2">
+                                Region
+                            </th>
+                            <th className="border border-gray-300 px-4 py-2">
+                                Country
+                            </th>
+                            <th className="border border-gray-300 px-4 py-2">
+                                Capital
+                            </th>
+                            <th className="border border-gray-300 px-4 py-2">
+                                Currency
+                            </th>
+                            <th className="border border-gray-300 px-4 py-2">
+                                Language
+                            </th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="flex justify-center items-center gap-2 mt-4">
-                <button
-                    onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
-                    disabled={currentPage === 1}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                >
-                    prev
-                </button>
-                <span className="px-3 py-1">
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                >
-                    next
-                </button>
+                    </thead>
+                    <tbody>
+                        {currentCountries.map((country) => (
+                            <tr key={country.capital[0]}>
+                                <td className="border border-gray-300 px-4 py-2">
+                                    {country.region}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                    {country.name.common}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                    {country.capital[0]}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                    {Object.values(country.currencies)[0]?.name}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                    {Object.values(country.languages)[0]}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <div className="flex justify-center items-center gap-2 mt-4">
+                    <button
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 border rounded disabled:opacity-50"
+                    >
+                        prev
+                    </button>
+                    <span className="px-3 py-1">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                            )
+                        }
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 border rounded disabled:opacity-50"
+                    >
+                        next
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -1,7 +1,6 @@
 // src/api/index.ts
 import axios from 'axios';
 
-// In src/api/index.ts
 const api = axios.create({
     baseURL: 'https://lexiconapi.onrender.com',
     timeout: 10000,
