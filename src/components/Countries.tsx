@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getAllCountries } from '../api/countries';
 
 // Gotta admit, defining Country type was really difficult ))
@@ -19,27 +19,17 @@ const Countries = () => {
     const [countries, setCountries] = useState<Country[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(15);
-    const [totalItems, setTotalItems] = useState(0);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(false);
+    const [selectedCurrency, setSelectedCurrency] = useState<string>('');
     const [independetCountries, setIndependetCountries] = useState<Country[]>(
         []
     );
-
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    const filteredCountries = isCheckboxChecked
-        ? independetCountries
-        : countries;
-    const currentCountries = filteredCountries.slice(startIndex, endIndex);
 
     useEffect(() => {
         const fetchCountries = async () => {
             const response = await getAllCountries();
             console.log(response, 'response');
             setCountries(response);
-            setTotalItems(response.length);
         };
         fetchCountries();
     }, []);
@@ -55,11 +45,41 @@ const Countries = () => {
                 (country) => country.independent === true
             );
             setIndependetCountries(independentCountries);
-            setTotalItems(independentCountries.length);
         } else {
-            setTotalItems(countries.length);
         }
     }, [isCheckboxChecked, countries]);
+
+    const filteredCountries = useMemo(() => {
+        let filtered = countries;
+
+        // independent filter
+        if (isCheckboxChecked) {
+            filtered = filtered.filter((country) => country.independent);
+        }
+
+        // currency filter
+        if (selectedCurrency) {
+            filtered = filtered.filter((country) => {
+                const currencyCodes = Object.keys(country.currencies);
+                return currencyCodes.includes(selectedCurrency);
+            });
+        }
+
+        return filtered;
+    }, [countries, isCheckboxChecked, selectedCurrency]);
+
+    const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedCurrency(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const totalItems = filteredCountries.length;
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const currentCountries = filteredCountries.slice(startIndex, endIndex);
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -74,9 +94,14 @@ const Countries = () => {
                 </div>
                 <div className="flex align-center justify-center gap-4 py-2 font-semibold">
                     <label className="m-auto">Currency</label>
-                    <select className="border border-2 px-2 py-1">
-                        <option>USD</option>
-                        <option>EUR</option>
+                    <select
+                        className="border border-2 px-2 py-1"
+                        value={selectedCurrency}
+                        onChange={handleCurrencyChange}
+                    >
+                        <option value="">All Currencies</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
                     </select>
                 </div>
             </div>
